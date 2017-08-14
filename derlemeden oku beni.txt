@@ -1,0 +1,3 @@
+Dosyalar ayný dizinde olacak.
+"main.c" derlenmesi yeterlidir.
+Soyutlamayý farklý yaptým. Uðraþýlmasýn diye.
