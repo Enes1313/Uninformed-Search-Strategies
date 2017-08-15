@@ -47,7 +47,6 @@ int UCSforST(SmTree *smTree, int m)
 void pushForUCS(SmTree *smTree)
 {
 	Liste * iter = rootUCS;
-	Liste * temp = (Liste *) malloc(sizeof(Liste));
 	
 	if(rootUCS == NULL)
 	{ 
@@ -57,12 +56,15 @@ void pushForUCS(SmTree *smTree)
 	}
 	else if(rootUCS->nd->cost > smTree->cost)
 	{
+		Liste * temp = (Liste *) malloc(sizeof(Liste));
 		temp->next = rootUCS;
 		rootUCS = temp;
 		temp->nd = smTree;
 	}
 	else
 	{
+		Liste * temp = (Liste *) malloc(sizeof(Liste));
+	
 		while((iter->next != NULL) && (iter->next->nd->cost < smTree->cost))
 			iter = iter->next;
 			
