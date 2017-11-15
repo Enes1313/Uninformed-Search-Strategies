@@ -1,3 +1,3 @@
 # Uninformed-Search-Strategies
-Standart : C99
+Standart : C99 - 
 Ana dosya : USS.c
