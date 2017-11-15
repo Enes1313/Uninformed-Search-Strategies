@@ -1,90 +1,50 @@
-int UCSforST(SmTree *smTree, int m)
+/*
+ * ucs.c
+ *
+ *  Created on: 14 Kas 2017
+ *      Author: tayyizaman
+ */
+
+#include <stdio.h>
+#include "USS.h"
+
+int UCSforMT(MyTree my_tree, Data d)
 {
-	int i; 
-	SmTree *buff = smTree;
-	
-	if(smTree == NULL)
-	{
-		puts("Agac bos!");
-		return -1;
-	}
-	
-	printf("\nUCS: Araniyor.\n\n");
-	printf("Dugum : Root  , Data : %4d, Cost :    0 (root)\n", smTree->data);
-	
-	if (buff->data == m)
-	{
-		while(popForUCS() != NULL);
+	if(isEmptyMyTree(my_tree))
+		return 0;
+
+	printf("\nUCS: Araniyor.\n\nDugum : %8s, Data : %4d, Cost :    0\n", "Root", (int) my_tree->root->data);
+
+	if (my_tree->root->data == d)
 		return 1;
-	}
-	
-	while(buff != NULL)
+
+	LinkedList ll = createLinkedList();
+
+	DONGU:
+
+	for(int i = 0; i < MAX_NODES; i++)
 	{
-		for(i = 0; i < MAX_NODES; i++)
-			if(buff->subNodes[i] != NULL)
-			{
-				buff->subNodes[i]->cost += buff->cost;
-				pushForUCS(buff->subNodes[i]);
-			}
-				
-		buff = popForUCS();
-		
-		if(buff != NULL)
+		if(my_tree->iter->subNodes[i] != NULL)
 		{
-			printf("Dugum : %x, Data : %4d, Cost : %4d\n", *((unsigned int *)&buff), buff->data, buff->cost);
-			
-			if (buff->data == m)
-			{
-				while(popForUCS() != NULL);
-				return 1;
-			}
+			my_tree->iter->subNodes[i]->cost += my_tree->iter->cost;
+			insert(ll, (Data) (my_tree->iter->subNodes[i]));
 		}
 	}
-	
-	return -1;
-}
 
-void pushForUCS(SmTree *smTree)
-{
-	Liste * iter = rootUCS;
-	
-	if(rootUCS == NULL)
-	{ 
-		rootUCS = (Liste *) malloc(sizeof(Liste));
-		rootUCS->nd = smTree;
-		rootUCS->next = NULL;
-	}
-	else if(rootUCS->nd->cost > smTree->cost)
+	if(get(ll, (pData) &(my_tree->iter)))
 	{
-		Liste * temp = (Liste *) malloc(sizeof(Liste));
-		temp->next = rootUCS;
-		rootUCS = temp;
-		temp->nd = smTree;
-	}
-	else
-	{
-		Liste * temp = (Liste *) malloc(sizeof(Liste));
-	
-		while((iter->next != NULL) && (iter->next->nd->cost < smTree->cost))
-			iter = iter->next;
-			
-		temp->next = iter->next;
-		iter->next = temp;
-		temp->nd = smTree;
-	}
-}
+		printf("Dugum : %8x, Data : %4d, Cost : %4d\n", *((unsigned int *)&(my_tree->iter)), my_tree->iter->data, my_tree->iter->cost);
 
-SmTree * popForUCS()
-{
-	SmTree * smTree = NULL;
-	
-	if(rootUCS != NULL)
-	{
-		Liste * temp = rootUCS->next;
-		smTree = rootUCS->nd;
-		free(rootUCS);
-		rootUCS = temp;
+		if (my_tree->iter->data == d)
+		{
+			my_tree->iter = my_tree->root;
+			clearLinkedList(ll);
+			return 1;
+		}
+		goto DONGU;
 	}
-	
-	return smTree;
+
+	my_tree->iter = my_tree->root;
+	clearLinkedList(ll);
+	return 0;
 }

@@ -1,82 +1,46 @@
-int BFSforST(SmTree *smTree, int x)
+/*
+ * bfs.c
+ *
+ *  Created on: 13 Kas 2017
+ *      Author: tayyizaman
+ */
+
+#include <stdio.h>
+#include "USS.h"
+
+int BFSforMT(MyTree my_tree, Data d)
 {
-	int i;
-	SmTree *buff = smTree;
-	
-	if(smTree == NULL)
-	{
-		puts("Agac bos!");
-		return -1;
-	}
-	
-	printf("\nBFS: Araniyor.\n\n");
-	printf("Dugum : Root  , Data : %4d (root)\n", smTree->data);
-	
-	if (buff->data == x)
-	{
-		while(popForBFS() != NULL); /*Kötübir yöntem olmakla birlikte þuanlýk böyle hafiza temizleyelim.*/
+	if(isEmptyMyTree(my_tree))
+		return 0;
+
+	printf("\nBFS: AranÄ±yor.\n\nDugum : %8s, Data : %4d\n", "Root", (int) my_tree->root->data);
+
+	if (my_tree->root->data == d)
 		return 1;
-	}
-	
-	while(buff != NULL)
+
+	Queue q = createQueue();
+
+	do
 	{
-		for(i = 0; i < MAX_NODES; i++)
-			if(buff->subNodes[i] != NULL)
+		for(int i = 0; i < MAX_NODES; i++)
+		{
+			if(my_tree->iter->subNodes[i] != NULL)
 			{
-				/*BFS için alt düðümleri kuyruk yapýsýyla hafýzada tutmamýz gerekmektedir.*/
-				pushForBFS(buff->subNodes[i]);
-				printf("Dugum : %x, Data : %4d\n", *((unsigned int *)&buff->subNodes[i]), buff->subNodes[i]->data);
-				
-				if (buff->subNodes[i]->data == x)
+				enqueue(q, (Data) (my_tree->iter->subNodes[i]));
+				printf("Dugum : %8x, Data : %4d\n", *((unsigned int *)&(my_tree->iter->subNodes[i])), (int) my_tree->iter->subNodes[i]->data);
+
+				if (my_tree->iter->subNodes[i]->data == d)
 				{
-					while(popForBFS() != NULL);
+					my_tree->iter = my_tree->root;
+					clearQueue(q);
 					return 1;
 				}
 			}
-		buff = popForBFS();
-	}
-	return -1;
+		}
+	}while(dequeue(q, (pData) &(my_tree->iter)));
+
+	my_tree->iter = my_tree->root;
+	clearQueue(q);
+	return 0;
 }
 
-void pushForBFS(SmTree *smTree)
-{
-	if(rootBFS == NULL)
-	{
-		rootBFS = (Liste *) malloc(sizeof(Liste));
-		rootBFS->nd = smTree;
-		rootBFS->next = NULL;
-	}
-	else
-	{
-		Liste *b = (Liste *) malloc(sizeof(Liste));
-		b->nd = smTree;
-		b->next = rootBFS;
-		rootBFS = b;
-	}
-}
-
-SmTree * popForBFS()
-{
-	SmTree * smTree;
-	
-	if(rootBFS == NULL)
-		return NULL;
-	
-	if(rootBFS->next == NULL){
-		smTree = rootBFS->nd;
-		free(rootBFS);
-		rootBFS = NULL;
-		return smTree;
-	}
-	
-	Liste * iter = rootBFS;
-	while (iter->next->next != NULL)
-		iter = iter->next;
-	Liste * temp = iter->next;
-	
-	smTree = temp->nd;
-	iter->next = NULL;
-	free(temp);
-	
-	return smTree;
-}

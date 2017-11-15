@@ -1,39 +1,40 @@
-int DFSforST(SmTree *smTree, int x)
+/*
+ * dfs.c
+ *
+ *  Created on: 14 Kas 2017
+ *      Author: tayyizaman
+ */
+
+#include <stdio.h>
+#include "USS.h"
+
+int DFSforMT(MyTree my_tree, Data d)
 {
-	rootKontrolDFS = smTree;  	/* Normalde gereksiz, sadece ekrana root basabilmek için. */
-	
-	if(smTree == NULL)
-	{
-		puts("Agac bos!");
-		return -1;
-	}
-	
+	if(isEmptyMyTree(my_tree))
+		return 0;
+
 	printf("\nDFS: Araniyor.\n\n");
-	
-	if (searchForDFS(smTree, x) == 1)
+
+	if (searchForDFS(my_tree->root, d))
 		return 1;
-		
-	return -1;
+
+	return 0;
 }
 
-int searchForDFS(SmTree *smTree, int x)
+int searchForDFS(Node node, Data d)
 {
-	int i;
-	if(smTree == NULL)
-		return -1;
-	
-	for(i = 0; i < MAX_NODES; i++)
-		if(searchForDFS(smTree->subNodes[i], x) == 1)
+	if(node == NULL)
+		return 0;
+
+	for(int i = 0; i < MAX_NODES; i++)
+		if(searchForDFS(node->subNodes[i], d))
 			return 1;
-	
-	if(smTree != rootKontrolDFS)
-		printf("Dugum : %x, Data : %4d\n", *((unsigned int *)&smTree), smTree->data);
-	else
-		printf("Dugum : Root  , Data : %4d (root)\n", smTree->data);
-		
-	if(smTree->data == x)
+
+	printf("Dugum : %8x, Data : %4d\n", *((unsigned int *)&node), (int) node->data);
+
+	if(node->data == d)
 		return 1;
-		
-	return -1;
+
+	return 0;
 }
 
