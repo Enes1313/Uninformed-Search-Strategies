@@ -3,7 +3,7 @@
  Name        : USS.c
  Author      : Enes AYDIN
  Version     :
- Copyright   : Copyriht dediğin nedir ki gülüm?
+ Copyright   : Copyright dediğin nedir ki gülüm?
  Description : Uninformed Search Strategies / C99
  ============================================================================
  */
